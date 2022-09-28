@@ -43,6 +43,21 @@ class Book(models.Model):
     isbn = models.CharField(max_length=13,
                             help_text="Enter a thirteen-place symbol index", verbose_name="ISBN of book")
 
+    def display_author(self):
+        return ', '.join([author.last_name for author in self.author.all()])
+
+    display_author.short_description = 'Author'
+
+    def display_genre(self):
+        return ', '.join([genre.name for genre in self.genre.all()])
+
+    display_genre.short_description = 'Genre'
+
+    def display_language(self):
+        return ', '.join([language.lang for language in self.language.all()])
+
+    display_language.short_description = 'Language'
+
     def __str__(self):
         return self.title
 
