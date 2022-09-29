@@ -1,0 +1,19 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+<h1>Main Page</h1>
+<p>Welcome to the <em>Books World!</em>This is a simple web-site based on Django framework.
+Developed with Python</p>
+<h2>
+    Dynamic content
+</h2>
+<p>
+    Data base of site consist few next records:
+</p>
+<ul>
+    <li><strong>Count of books:</strong>{{ num_books }}</li>
+    <li><strong>Count of copy of the books:</strong>{{ num_instances }}</li>
+    <li><strong>Count of copy of the books in cart:</strong>{{ num_instances_available }}</li>
+    <li><strong>Count of authors:</strong>{{ num_author }}</li>
+</ul>
+{% endblock %}
