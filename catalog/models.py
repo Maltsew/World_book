@@ -63,8 +63,10 @@ class Book(models.Model):
 
     def get_absolute_url(self):
         """returns a URL for access a determine book"""
-        # return reverse('catalog:books', args=[str(self.id)])
-        return f"/books/{str(self.id)}/"
+        # return reverse('books/', kwargs={'id': self.id}) # 348
+        # TO-DO: django docs recommends reverse()
+        # return f"/books/{str(self.id)}/" ->1
+        return reverse('book-detail', args=[str(self.id)])
 
 
 class Status(models.Model):
