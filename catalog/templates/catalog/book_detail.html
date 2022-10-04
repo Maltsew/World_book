@@ -1,0 +1,27 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+<h1>Book title is {{ book.title }}</h1>
+<p><strong>Genre is {{ book.display_genre }}</strong></p>
+<p><strong>Summary is {{ book.summary }}</strong></p>
+<p><strong>Index ISBN is {{ book.isbn }}</strong></p>
+<p><strong>Language is {{ book.display_language }}</strong></p>
+{% for author in book.author.all %}
+<p><strong>Author is:</strong>
+<a href="">{{ author.first_name }} {{author.last_name }}</a> </p>
+{% endfor %}
+
+<div style="margin-left:20px;margin-top:20px">
+  <h4> Count of copy of the books:</h4>
+  {% for copy in book.bookinstance_set.all %}
+  <hr><p class="{% if copy.status == 1 %} text-success
+{% elif copy.status == 2 %} text-danger
+{% else %} text-warning
+{% endif %}"> {{ copy.get_status_display }}</p>
+  <p><strong>Imprint is:</strong> {{copy.imprint }}</p>
+  <p class="text-muted"><strong>Number is: </strong>{{ copy.id }}</p>
+  <p><strong>Status of a copy of the book in DB </strong>{{ copy.status }} </p>
+  {% endfor %}
+</div>
+{% endblock %}
+<p><strong>Author is: </strong><a href="">{{ author.first_name }} {{ author.last_name }} </a></p>
