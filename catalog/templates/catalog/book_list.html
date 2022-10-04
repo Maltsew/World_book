@@ -8,8 +8,10 @@
   <li>
     <a href="{{ book.get_absolute_url }}">
       {{ book.title }}</a>
-    ({{ book.genre }})
-    ({{ book.author }})
+    <!-- WARNING! only admin-registered tags can be puts right there in develop,
+    Check it later.-->
+    ({{ book.display_genre }})
+    ({{ book.display_author }})
   </li>
   {% endfor %}
 </ul>
