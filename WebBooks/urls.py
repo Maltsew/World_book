@@ -25,7 +25,10 @@ urlpatterns = [
     # url(r'book/<int:id>/', views.BookDetailView.as_view(), name='book-detail'),
     url(r'^book/(?P<pk>\d+)$', views.BookDetailView.as_view(), name='book-detail'),
     url(r'authors/$', views.AuthorListView.as_view(), name='authors'),
-    path('authors_add/', views.authors_add, name='authors_add')
+    path('authors_add/', views.authors_add, name='authors_add'),
+    path('create/', views.EditAuthor.create, name='create'),
+    path('delete/<int:id>/', views.EditAuthor.delete, name='delete'),
+    path('edit/<int:id>', views.EditAuthor.edit, name='edit'),
 ]
 
 urlpatterns += [
