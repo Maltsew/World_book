@@ -3,6 +3,8 @@ from django.http import HttpResponse
 from django.template.response import TemplateResponse
 from .models import Book, Author, BookInstance, Genre
 from django.views import generic
+from django.contrib.auth.mixins import LoginRequiredMixin
+from .forms import AuthorsForm
 
 
 def index(requset):
@@ -37,3 +39,19 @@ class BookDetailView(generic.DetailView):
 class AuthorListView(generic.ListView):
     model = Author
     paginate_by = 4
+
+
+class LoanedBooksByUserListView(LoginRequiredMixin, generic.ListView):
+    """Universal base class view of books being in the order of current user"""
+    model = BookInstance
+    template_name = 'catalog/bookinstance_list_borrowed_user.html'
+    paginate_by = 10
+
+    def get_queryset(self):
+        return BookInstance.objects.filter(borrower=self.request.user).filter(status__exact='2').order_by('due_back')
+
+def authors_add(request):
+    author = Author.objects.all()
+    authorsform = AuthorsForm()
+    return TemplateResponse(request, "catalog/authors_add.html",
+                            {"form": authorsform, "author": author})

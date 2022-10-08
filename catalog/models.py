@@ -1,5 +1,7 @@
 from django.db import models
 from django.urls import reverse
+from django.contrib.auth.models import User
+from datetime import date
 
 
 # Create your models here.
@@ -90,6 +92,14 @@ class BookInstance(models.Model):
                                verbose_name="Status of a copy of the book")
     due_back = models.DateField(null=True, blank=True, help_text="Enter date the status change",
                                 verbose_name="Date of change the status")
+    borrower = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True,
+                                 verbose_name="Customer", help_text='Select a book customer')
 
     def __str__(self):
         return f"{self.book} {self.stock_num} {self.status}"
+
+    @property
+    def is_overdue(self):
+        if self.due_back and date.today() > self.due_back:
+            return True
+        return False

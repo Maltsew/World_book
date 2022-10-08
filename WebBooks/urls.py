@@ -25,8 +25,14 @@ urlpatterns = [
     # url(r'book/<int:id>/', views.BookDetailView.as_view(), name='book-detail'),
     url(r'^book/(?P<pk>\d+)$', views.BookDetailView.as_view(), name='book-detail'),
     url(r'authors/$', views.AuthorListView.as_view(), name='authors'),
+    path('authors_add/', views.authors_add, name='authors_add')
 ]
 
 urlpatterns += [
     path('accounts/', include('django.contrib.auth.urls')),
+]
+
+urlpatterns += [
+    # TO-DO Warning! base_generic: when logged user take a logout (being on any page) -> redirects into login
+    url(r'^mybooks/$', views.LoanedBooksByUserListView.as_view(), name='mybooks'),
 ]
