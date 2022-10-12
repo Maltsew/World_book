@@ -2,9 +2,10 @@ import datetime
 from django.test import TestCase
 from django.urls import resolve
 from catalog.views import index
-from catalog.models import Genre, Language, Author, Book, Status
+from catalog.models import Genre, Language, Author, Book, Status, BookInstance
 from datetime import date
 from django.urls import reverse
+from django.contrib.auth.models import User
 
 
 class GenreModelTest(TestCase):
@@ -67,41 +68,22 @@ class BookModelTest(TestCase):
     """Test book model"""
 
     def test_saving_and_retrieving_book(self):
-        book = Book.objects.create(title='Don Quixote',
-                                   summary='Alonso Quixano, a retired country gentleman in his fifties, lives',
-                                   isbn='9780744525021')
+
+        book = create_book()
         book.save()
-        temp1 = book.genre.create(name='Novel')
-        temp1.save()
-        temp2 = book.language.create(lang='English')
-        temp2.save()
-        temp3 = book.author.create(first_name='Migel de Cervantes', last_name='Aaa',
-                                  date_of_birth=datetime.date(1870, 4, 22),
-                                  date_of_death=datetime.date(1924, 1, 21))
-        temp3.save()
+        genre = create_genre()
+        genre.save()
         saved_book = Book.objects.all()
         self.assertEqual(saved_book.count(), 1)
         self.assertEqual(book.title, 'Don Quixote')
         self.assertEqual(book.summary, 'Alonso Quixano, a retired country gentleman in his fifties, lives')
-        self.assertEqual(temp1.name, 'Novel')
-        self.assertEqual(temp2.lang, 'English')
-        self.assertEqual(temp3.first_name, 'Migel de Cervantes')
-        self.assertEqual(temp3.last_name, 'Aaa')
-        self.assertEqual(temp3.date_of_birth, datetime.date(1870, 4, 22))
-        self.assertEqual(temp3.date_of_death, datetime.date(1924, 1, 21))
+
 
     """it is better to hold testing of display functions with the help of Django test client.
     One of ways is assertContains responses with get method from admin panel and check tags"""
 
-    def create_book(self):
-        book = Book.objects.create(title='Don Quixote',
-                                   summary='Alonso Quixano, a retired country gentleman in his fifties, lives',
-                                   isbn='9780744525021')
-        book.save()
-        return book
-
     def test_get_absolut_url(self):
-        w = self.create_book()
+        w = create_book()
         response = self.client.get(reverse('book-detail', args=[w.pk, ]))
         self.assertEqual(response.status_code, 200)
 
@@ -120,5 +102,51 @@ class StatusModelTest(TestCase):
 class BookInstanceModelTest(TestCase):
     """"""
 
-    # book = BookModelTest.create_book()
+    def test_saving_and_retrieving_bookinstance(self):
+        book = create_book()
+        status = create_status()
+        borrower = create_borrower()
+        bookinstance = BookInstance.objects.create(book=book, stock_num='123',
+                                                   imprint='Msk', status=status, due_back=datetime.date(2022, 10, 1),
+                                                   borrower=borrower)
+        bookinstance.save()
+        saved_bookinstance = BookInstance.objects.all()
+        self.assertEqual(saved_bookinstance.count(), 1)
+        self.assertEqual(bookinstance.imprint, 'Msk')
+        self.assertEqual(bookinstance.book.title, 'Don Quixote')
+        self.assertEqual(bookinstance.status.status_name, 'In stock')
 
+
+def create_book():
+    book = Book.objects.create(title='Don Quixote',
+                               summary='Alonso Quixano, a retired country gentleman in his fifties, lives',
+                               isbn='9780744525021')
+    book.save()
+    temp1 = book.genre.create(name='Novel')
+    temp1.save()
+    temp2 = book.language.create(lang='English')
+    temp2.save()
+    temp3 = book.author.create(first_name='Migel de Cervantes', last_name='Aaa',
+                               date_of_birth=datetime.date(1870, 4, 22),
+                               date_of_death=datetime.date(1924, 1, 21))
+    temp3.save()
+    saved_book = Book.objects.first()
+    return saved_book
+
+
+def create_status():
+    status = Status.objects.create(status_name='In stock')
+    status.save()
+    return status
+
+
+def create_borrower():
+    borrower = User.objects.create()
+    borrower.save()
+    return borrower
+
+
+def create_genre():
+    genre = Genre.objects.create(name='Novel')
+    genre.save()
+    return genre
