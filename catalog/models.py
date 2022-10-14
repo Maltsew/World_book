@@ -65,10 +65,7 @@ class Book(models.Model):
 
     def get_absolute_url(self):
         """returns a URL for access a determine book"""
-        # return reverse('books/', kwargs={'id': self.id}) # 348
-        # TO-DO: django docs recommends reverse()
-        # return f"/books/{str(self.id)}/" ->1
-        return reverse('book-detail', args=[str(self.id)])
+        return reverse('book-detail', args=[str(self.pk)])
 
 
 class Status(models.Model):
@@ -82,8 +79,8 @@ class Status(models.Model):
 
 
 class BookInstance(models.Model):
-    """Model for storage existing status of books"""
-    # TO-DO Check Meta class for sorting
+    """Model for storage status of books"""
+    # TO-DO see Meta class for sorting
     book = models.ForeignKey('Book', on_delete=models.CASCADE)
     stock_num = models.CharField(max_length=20, help_text="Enter stock number of a copy of the book")
     imprint = models.CharField(max_length=200, help_text="Enter the publishing house and year of a book",
