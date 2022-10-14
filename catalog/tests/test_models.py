@@ -117,6 +117,9 @@ class BookInstanceModelTest(TestCase):
         self.assertEqual(bookinstance.status.status_name, 'In stock')
 
 
+"""M.b. create objects for models which will be use many times"""
+
+
 def create_book():
     book = Book.objects.create(title='Don Quixote',
                                summary='Alonso Quixano, a retired country gentleman in his fifties, lives',
